@@ -1,0 +1,43 @@
+databases:
+  - name: system-design-assistant-db
+    databaseName: system_design_assistant
+    user: system_design_assistant
+
+services:
+  - type: web
+    name: system-design-assistant-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: system-design-assistant-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: system-design-assistant-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: APP_AUTH_SESSION_DAYS
+        value: 30
+      - key: APP_WEB_ALLOWED_ORIGINS
+        sync: false
+      - key: APP_AUTH_GOOGLE_CLIENT_ID
+        sync: false
+      - key: APP_AI_PROVIDER
+        value: groq
+      - key: APP_AI_GROQ_API_KEY
+        sync: false
+      - key: APP_AI_GROQ_MODEL
+        value: llama-3.1-8b-instant
+      - key: APP_AI_GEMINI_API_KEY
+        sync: false
+      - key: APP_AI_GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: APP_AI_OPENAI_API_KEY
+        sync: false
+      - key: APP_AI_OPENAI_MODEL
+        value: gpt-4o-mini
